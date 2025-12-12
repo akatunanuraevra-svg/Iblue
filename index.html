@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>iBlue - Premium Online Shopping</title>
+<style>
+:root{--brand:#1a73e8;--success:#28a745;--danger:#dc3545;--warning:#ffc107;--dark:#2d3748;--sale:#e74c3c}
+body{margin:0;font-family:Inter,Arial,sans-serif;background:#f6f7fb;color:#111}
+
+/* header & search */
+header{background:var(--brand);color:#fff;padding:12px 12px;position:sticky;top:0;z-index:200;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
+.header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:15px}
+.logo{display:flex;align-items:center;gap:12px;font-weight:700;font-size:24px;flex:none;background:linear-gradient(135deg, #1a73e8, #0047ab);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.logo-circle{width:45px;height:45px;background:linear-gradient(135deg, #1a73e8, #0047ab);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:18px;border:2px solid white;box-shadow:0 2px 8px rgba(26,115,232,0.3)}
+#search-bar{flex:1;padding:10px 15px;border-radius:25px;border:0;max-width:600px;font-size:14px}
+#menu-btn{background:#fff;color:var(--brand);padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-size:16px}
+#cart-btn,#wishlist-btn{background:#fff;color:var(--brand);padding:8px;border-radius:50%;border:none;cursor:pointer;position:relative;font-size:18px;width:40px;height:40px;display:flex;align-items:center;justify-content:center}
+#cart-count,#wishlist-count{position:absolute;top:-5px;right:-5px;background:var(--danger);color:#fff;padding:2px 6px;border-radius:50%;font-size:11px;min-width:18px;text-align:center}
+
+/* promo banner */
+.promo-banner{background:linear-gradient(45deg,#ff6b6b,#ee5a24);color:white;padding:10px;text-align:center;font-size:14px;font-weight:500}
+
+/* categories */
+.categories{max-width:1200px;margin:15px auto;display:flex;gap:10px;padding:10px;overflow:auto;scrollbar-width:none}
+.categories::-webkit-scrollbar{display:none}
+.cat-btn{background:#fff;border:1px solid #e6e6e6;padding:10px 15px;border-radius:25px;cursor:pointer;white-space:nowrap;transition:all 0.3s;font-size:14px}
+.cat-btn:hover{background:#f8f9fa}
+.cat-btn.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+
+/* product grid */
+.products-wrapper{max-width:1200px;margin:20px auto;padding:0 15px}
+.products{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:20px}
+.product{background:#fff;border-radius:12px;padding:15px;box-shadow:0 4px 12px rgba(18,24,36,0.08);display:flex;flex-direction:column;justify-content:space-between;transition:all 0.3s;cursor:pointer;position:relative;border:1px solid #f0f0f0}
+.product:hover{transform:translateY(-5px);box-shadow:0 8px 25px rgba(18,24,36,0.12)}
+.product img{width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:10px}
+.product h3{font-size:16px;margin:8px 0 6px;line-height:1.3;height:2.6em;overflow:hidden}
+.product .price{font-weight:700;margin-bottom:6px;color:var(--brand);font-size:18px}
+.product .original-price{text-decoration:line-through;color:#999;font-size:14px;margin-right:8px}
+.product .sale-badge{position:absolute;top:15px;left:15px;background:var(--sale);color:white;padding:4px 8px;border-radius:4px;font-size:12px;font-weight:bold}
+.product .urgency-badge{position:absolute;top:15px;left:15px;background:var(--warning);color:black;padding:4px 8px;border-radius:4px;font-size:12px;font-weight:bold}
+.product .meta{font-size:13px;color:#666;margin-bottom:5px}
+.product .rating{color:#f5a623;font-size:14px;margin-bottom:6px}
+.product .stock{font-size:12px;color:var(--danger);margin:4px 0;font-weight:500}
+.product .popularity{font-size:11px;color:#666}
+.product .add-to-cart-btn{width:100%;padding:10px;border-radius:8px;border:0;cursor:pointer;background:var(--brand);color:#fff;font-size:14px;font-weight:500;transition:background 0.3s;margin-top:8px}
+.product .add-to-cart-btn:hover{background:#1557b7}
+.wishlist-btn{position:absolute;top:15px;right:15px;background:rgba(255,255,255,0.95);border:none;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;box-shadow:0 2px 8px rgba(0,0,0,0.15);transition:all 0.3s}
+.wishlist-btn:hover{transform:scale(1.1)}
+
+/* buttons */
+.btn{flex:1;padding:10px;border-radius:8px;border:0;cursor:pointer;background:var(--brand);color:#fff;font-size:14px;font-weight:500}
+.btn-outline{background:#fff;color:var(--brand);border:1px solid var(--brand)}
+.btn-success{background:var(--success);color:#fff}
+.btn-warning{background:var(--warning);color:#000}
+.cart-remove{background:var(--danger);color:#fff;padding:6px 12px;border-radius:6px;border:none;cursor:pointer;font-size:12px}
+
+/* cart */
+#cart-box{position:fixed;right:20px;top:80px;width:360px;max-height:70vh;background:#fff;padding:20px;border-radius:12px;box-shadow:0 10px 30px rgba(11,22,60,0.15);display:none;z-index:300;overflow-y:auto}
+#cart-box h3{margin:0 0 15px;padding-bottom:10px;border-bottom:1px solid #eee}
+#cart-items p{margin:10px 0;padding:8px 0;border-bottom:1px solid #f5f5f5}
+.cart-btn-inline{margin-left:8px;padding:6px 10px;border-radius:6px;border:none;cursor:pointer;background:var(--brand);color:#fff;font-size:12px}
+
+/* wishlist */
+#wishlist-modal{position:fixed;right:20px;top:80px;width:360px;max-height:70vh;background:#fff;padding:20px;border-radius:12px;box-shadow:0 10px 30px rgba(11,22,60,0.15);display:none;z-index:300;overflow-y:auto}
+
+/* checkout modal */
+#checkout-modal{display:none;position:fixed;inset:0;background:rgba(2,6,23,0.5);align-items:center;justify-content:center;padding:20px;z-index:1000}
+#checkout-form{width:100%;max-width:500px;background:#fff;padding:20px;border-radius:12px;max-height:90vh;overflow-y:auto}
+#checkout-form h3{margin-top:0;padding-bottom:10px;border-bottom:1px solid #eee}
+#checkout-form input,#checkout-form select{width:100%;padding:10px;margin:8px 0;border-radius:6px;border:1px solid #ddd;font-size:14px}
+#checkout-form .summary{background:#f8f9fa;padding:12px;border-radius:6px;margin:12px 0;font-size:14px}
+#checkout-form button{width:100%;padding:12px;border-radius:8px;border:0;background:var(--brand);color:#fff;margin-top:10px;font-size:14px;font-weight:500}
+#payment-details{display:none;margin:12px 0;padding:12px;background:#f0f8ff;border-radius:6px;font-size:14px;border-left:4px solid var(--brand)}
+#promo-code-section{margin:12px 0;padding:12px;background:#f0f8ff;border-radius:6px}
+
+/* order confirmation */
+#order-confirm-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);justify-content:center;align-items:center;z-index:2000}
+#order-confirm-content{background:white;padding:30px;border-radius:15px;text-align:center;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.3);animation:popIn 0.4s}
+
+/* product detail modal */
+#product-detail-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);justify-content:center;align-items:flex-start;overflow-y:auto;z-index:500;padding:20px}
+#product-detail-content{background:#fff;border-radius:12px;padding:25px;width:100%;max-width:900px;position:relative;display:grid;grid-template-columns:1fr 1fr;gap:25px}
+#product-detail-content h3{margin-top:0;font-size:24px;color:var(--dark)}
+#product-detail-content .close-detail{position:absolute;top:15px;right:15px;background:var(--danger);color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;font-size:16px}
+#main-media img,#main-media video{width:100%;border-radius:10px;margin-bottom:10px}
+#thumbnail-container{display:flex;gap:10px;margin-top:10px;overflow-x:auto;padding:5px 0}
+#thumbnail-container img{width:70px;height:70px;object-fit:cover;border-radius:5px;cursor:pointer;border:2px solid transparent}
+#thumbnail-container img.selected{border-color:var(--brand)}
+#related-products{margin-top:25px;padding-top:15px;border-top:1px solid #eee}
+.related-item{display:inline-block;width:130px;margin-right:12px;text-align:center;cursor:pointer;vertical-align:top}
+.related-item img{width:100%;height:110px;object-fit:cover;border-radius:6px;margin-bottom:5px}
+.rating{color:#f5a623}
+
+/* featured categories */
+.featured-categories{max-width:1200px;margin:30px auto;padding:0 15px}
+.category-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-top:15px}
+.category-card{background:#fff;border-radius:12px;padding:20px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.08);transition:all 0.3s;cursor:pointer;border:1px solid #f0f0f0}
+.category-card:hover{transform:translateY(-5px);box-shadow:0 8px 25px rgba(0,0,0,0.12)}
+.category-card img{width:80px;height:80px;object-fit:cover;border-radius:50%;margin-bottom:10px}
+.category-card h3{margin:0;font-size:16px;color:var(--dark)}
+
+/* recently viewed */
+.recently-viewed{max-width:1200px;margin:30px auto;padding:0 15px}
+.recently-viewed .products{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+
+/* reviews */
+.reviews-section{margin-top:20px;padding:15px;background:#f8f9fa;border-radius:8px}
+.review{background:white;padding:12px;margin:10px 0;border-radius:6px;border-left:4px solid var(--brand)}
+.review .review-header{display:flex;justify-content:space-between;margin-bottom:5px}
+.review .reviewer{font-weight:bold;color:var(--dark)}
+.review .review-date{color:#666;font-size:12px}
+
+/* footer */
+footer{margin:50px 0 20px;text-align:center;color:#666;padding:0 15px}
+.footer-content{max-width:1200px;margin:0 auto;padding-top:20px;border-top:1px solid #eee}
+
+/* animations */
+@keyframes popIn{
+  0%{transform:scale(0.8);opacity:0}
+  100%{transform:scale(1);opacity:1}
+}
+@keyframes slideIn{
+  from{transform:translateX(100%);opacity:0}
+  to{transform:translateX(0);opacity:1}
+}
+@keyframes slideOut{
+  from{transform:translateX(0);opacity:1}
+  to{transform:translateX(100%);opacity:0}
+}
+
+/* responsive */
+@media (max-width:768px){
+  #product-detail-content{grid-template-columns:1fr;gap:20px}
+  .header-inner{gap:10px}
+  #search-bar{max-width:400px}
+  .products{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px}
+  .product{padding:12px}
+  .product img{height:140px}
+  #cart-box,#wishlist-modal{width:90vw;right:5vw;left:5vw}
+  .category-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+}
+@media (max-width:480px){
+  .header-inner{flex-wrap:wrap}
+  #search-bar{order:3;flex:1 0 100%;margin-top:10px}
+  .logo{font-size:20px}
+  .logo-circle{width:35px;height:35px;font-size:18px}
+  .products{grid-template-columns:repeat(2,1fr);gap:12px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-circle">iB</div>
+      <span>iBlue</span>
+    </div>
+    <button id="menu-btn">☰</button>
+    <input id="search-bar" placeholder="Search products, brands, categories..." oninput="onSearch()" />
+    <button id="wishlist-btn" title="Wishlist">❤️</button>
+    <button id="cart-btn">🛒<span id="cart-count">0</span></button>
+  </div>
+</header>
+
+<div class="promo-banner">
+  🎉 FREE DELIVERY on orders over UGX 300,000! • 📞 Call: 0757 970 465 • 🚚 Fast Delivery Across Kampala
+</div>
+
+<!-- Featured Categories -->
+<div class="featured-categories">
+  <h2 style="text-align:center;margin-bottom:20px;color:var(--dark)">Shop by Category</h2>
+  <div class="category-grid" id="featured-categories"></div>
+</div>
+
+<!-- Recently Viewed -->
+<div class="recently-viewed" id="recently-viewed-section" style="display:none">
+  <h2 style="margin-bottom:20px;color:var(--dark)">Recently Viewed</h2>
+  <div class="products" id="recently-viewed-products"></div>
+</div>
+  
+<div class="categories" id="category-nav"></div>
+<div class="products-wrapper">
+  <div class="products" id="products"></div>
+</div>
+
+<!-- Cart -->
+<div id="cart-box">
+  <h3>Your Shopping Cart</h3>
+  <div id="cart-items"></div>
+</div>
+
+<!-- Wishlist -->
+<div id="wishlist-modal">
+  <h3>Your Wishlist</h3>
+  <div id="wishlist-items"></div>
+</div>
+
+<!-- Checkout -->
+<div id="checkout-modal">
+  <div id="checkout-form">
+    <h3>Checkout</h3>
+    <input id="customer-name" placeholder="Full name" required />
+    <input id="customer-phone" placeholder="Phone number" required />
+    <input id="customer-address" placeholder="Delivery address" required />
+    <select id="payment-method" onchange="showPaymentDetails()" required>
+      <option value="">Select Payment Method</option>
+      <option value="mobile_money">Mobile Money</option>
+      <option value="bank_transfer">Bank Transfer</option>
+      <option value="cash">Cash on Delivery</option>
+    </select>
+    
+    <!-- PROMO CODE SECTION -->
+    <div id="promo-code-section">
+      <h4 style="margin-top:0">Promo Code</h4>
+      <div style="display:flex;gap:8px">
+        <input id="promo-code" placeholder="Enter promo code" style="flex:1" />
+        <button onclick="applyPromoCode()" class="btn-outline">Apply</button>
+      </div>
+      <div id="promo-message" style="font-size:12px;margin-top:5px"></div>
+    </div>
+    
+    <div id="payment-details">
+      <p id="payment-instructions"></p>
+    </div>
+    <div class="summary" id="checkout-summary"></div>
+    <button onclick="submitOrder()" class="btn-success">Confirm Order</button>
+    <button onclick="closeCheckout()" class="btn-outline">Cancel</button>
+  </div>
+</div>
+
+<!-- Order Confirmation -->
+<div id="order-confirm-modal">
+  <div id="order-confirm-content">
+    <h3 style="color: var(--brand);">🎉 Order Placed Successfully!</h3>
+    <p>Your order ID: <strong id="order-id">#IB123456</strong></p>
+    <p>We'll contact you within 30 minutes to confirm delivery.</p>
+    <p>Thank you for shopping with iBlue! 🛍️</p>
+    <button onclick="closeOrderConfirm()" class="btn" style="margin-top: 15px;">Continue Shopping</button>
+  </div>
+</div>
+
+<!-- Product Detail Modal -->
+<div id="product-detail-modal">
+  <div id="product-detail-content">
+    <div id="left-col">
+      <div id="main-media"></div>
+      <div id="thumbnail-container"></div>
+    </div>
+    <div id="right-col">
+      <button class="close-detail" onclick="closeProductDetail()">X</button>
+      <h3 id="detail-name"></h3>
+      <p id="detail-price" class="price"></p>
+      <p id="detail-desc"></p>
+      <p class="rating" id="detail-rating"></p>
+      <p id="detail-stock" class="stock"></p>
+      
+      <!-- BULK PRICING SECTION -->
+      <div id="bulk-pricing-section" style="margin:15px 0;padding:12px;background:#f8f9fa;border-radius:6px;display:none">
+        <h4 style="margin:0 0 8px 0">Bulk Discounts</h4>
+        <div id="bulk-pricing-list"></div>
+      </div>
+      
+      <label style="display:block;margin:15px 0;"><strong>Quantity:</strong> 
+        <input type="number" min="1" value="1" id="detail-qty" style="width:80px;margin-left:8px;padding:8px;border:1px solid #ddd;border-radius:4px"/>
+      </label>
+      <div style="margin-top:20px;display:flex;gap:10px">
+        <button class="btn" onclick="addDetailToCart()">Add to Cart</button>
+        <button class="btn btn-success" onclick="buyDetailNow()">Buy Now</button>
+      </div>
+      
+      <!-- REVIEWS SECTION -->
+      <div class="reviews-section" id="reviews-section">
+        <h4>Customer Reviews</h4>
+        <div id="reviews-list"></div>
+      </div>
+      
+      <div id="related-products">
+        <h4>Customers Also Viewed:</h4>
+        <div id="related-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-content">
+    © 2025 iBlue Online Shop — 📞 Contact: 0757 970 465 | 🚚 Delivery across Kampala & Surrounding Areas
+    <br><small>Your trusted partner for all shopping needs</small>
+  </div>
+</footer>
+
+<script>
+// ========== COMPLETE PRODUCTS DATABASE (60+ PRODUCTS) ==========
+const productsData = [
+  // ELECTRONICS (20 products)
+  {
+    id:1,category:'electronics',brand:'Samsung',name:'Samsung Galaxy A14',price:650000,originalPrice:750000,discount:13,
+    images:['https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400'],rating:4,stock:12,
+    description:'6.6" Display, 4GB RAM, 64GB Storage - Perfect for students',popularity:42,urgency: "🚨 Almost gone!",
+    bulkPricing: [{minQty: 5, discount: 10, price: 585000},{minQty: 10, discount: 15, price: 552500}],
+    reviews: [{user: "John M.", rating: 5, comment: "Great phone for the price! Fast delivery.", date: "2024-01-15"},{user: "Sarah K.", rating: 4, comment: "Good battery life, camera could be better", date: "2024-01-10"}]
+  },
+  {
+    id:2,category:'electronics',brand:'Apple',name:'iPhone 12 128GB',price:2200000,
+    images:['https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400'],rating:5,stock:8,
+    description:'A14 Bionic Chip, Dual Camera, 5G Ready',popularity:38,urgency: "🔥 Popular item!",
+    bulkPricing: [{minQty: 2, discount: 5, price: 2090000},{minQty: 5, discount: 8, price: 2024000}],
+    reviews: [{user: "David L.", rating: 5, comment: "Excellent phone, worth every shilling!", date: "2024-01-12"},{user: "Grace N.", rating: 5, comment: "Fast and reliable. Great service!", date: "2024-01-08"}]
+  },
+  {
+    id:3,category:'electronics',brand:'Tecno',name:'Tecno Spark 10 Pro',price:580000,originalPrice:650000,discount:11,
+    images:['https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400'],rating:4,stock:15,
+    description:'5000mAh Battery, 6.8" HD+ Display',popularity:31,urgency: "⚡ Fast delivery",
+    reviews: [{user: "Mike T.", rating: 4, comment: "Good value for money", date: "2024-01-14"}]
+  },
+  {
+    id:4,category:'electronics',brand:'Infinix',name:'Infinix Hot 30i',price:720000,
+    images:['https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400'],rating:4,stock:7,
+    description:'8GB RAM, 128GB Storage - Fast performance',popularity:27,urgency: "⚡ Fast delivery"
+  },
+  {
+    id:5,category:'electronics',brand:'Samsung',name:'Samsung 32" Smart TV',price:1200000,
+    images:['https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400'],rating:5,stock:4,
+    description:'HD Smart TV with streaming apps',popularity:19,urgency: "🚨 Almost gone!"
+  },
+  {
+    id:6,category:'electronics',brand:'Sony',name:'Sony Bluetooth Speaker',price:180000,
+    images:['https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400'],rating:4,stock:20,
+    description:'Portable speaker with 12h battery life',popularity:56,urgency: "🔥 Popular item!"
+  },
+  {
+    id:7,category:'electronics',brand:'Canon',name:'Canon EOS Camera',price:1850000,
+    images:['https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=400'],rating:5,stock:3,
+    description:'24MP DSLR Camera with kit lens',popularity:23,urgency: "🚨 Almost gone!"
+  },
+  {
+    id:8,category:'electronics',brand:'HP',name:'HP Laptop 15s',price:1950000,
+    images:['https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400'],rating:4,stock:6,
+    description:'Intel i5, 8GB RAM, 512GB SSD - Perfect for work',popularity:34,urgency: "⚡ Fast delivery"
+  },
+  {
+    id:9,category:'electronics',brand:'Dell',name:'Dell Inspiron Laptop',price:2450000,
+    images:['https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400'],rating:4,stock:4,
+    description:'15.6" Display, 16GB RAM, 1TB HDD',popularity:28,urgency: "🚨 Almost gone!"
+  },
+  {
+    id:10,category:'electronics',brand:'Apple',name:'MacBook Air M1',price:4200000,
+    images:['https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400'],rating:5,stock:2,
+    description:'Apple M1 Chip, 8GB RAM, 256GB SSD',popularity:19,urgency: "🚨 Almost gone!"
+  },
+
+  // PHONES & TABLETS (15 products)
+  {
+    id:11,category:'phones',brand:'Itel',name:'Itel P40 Power',price:490000,
+    images:['https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=400'],rating:3,stock:18,
+    description:'6000mAh Battery - Lasts 3 days on single charge',popularity:45,urgency: "🔥 Popular item!"
+  },
+  {
+    id:12,category:'phones',brand:'Huawei',name:'Huawei Y9a',price:850000,
+    images:['https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400'],rating:4,stock:6,
+    description:'6.63" Display, 8GB RAM, 128GB Storage',popularity:23,urgency: "⚡ Fast delivery"
+  },
+  {
+    id:13,category:'phones',brand:'Nokia',name:'Nokia G20',price:520000,
+    images:['https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400'],rating:4,stock:9,
+    description:'3-day battery life, 48MP quad camera',popularity:31,urgency: "⚡ Fast delivery"
+  },
+  {
+    id:14,category:'phones',brand:'Samsung',name:'Samsung A32',price:780000,
+    images:['https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400'],rating:4,stock:11,
+    description:'6.4" Super AMOLED, 64MP Camera',popularity:42,urgency: "🔥 Popular item!"
+  },
+  {
+    id:15,category:'phones',brand:'Apple',name:'iPhone 13 Pro',price:3800000,
+    images:['https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400'],rating:5,stock:3,
+    description:'Pro camera system, 5G, A15 Bionic',popularity:18,urgency: "🚨 Almost gone!"
+  },
+
+  // FASHION & CLOTHING (15 products)
+  {
+    id:16,category:'fashion',brand:'Nike',name:'Nike Air Max Shoes',price:280000,originalPrice:350000,discount:20,
+    images:['https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400'],rating:5,stock:22,
+    description:'Original Nike Air Max - Comfortable for all day',popularity:56,urgency: "🔥 Hot deal!",
+    bulkPricing: [{minQty: 3, discount: 15, price: 238000},{minQty: 6, discount: 25, price: 210000}],
+    reviews: [{user: "James K.", rating: 5, comment: "Very comfortable shoes, perfect for running", date: "2024-01-13"},{user: "Linda P.", rating: 4, comment: "Good quality, true to size", date: "2024-01-09"}]
+  },
+  {
+    id:17,category:'fashion',brand:'Adidas',name:'Adidas Running Shoes',price:240000,
+    images:['https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400'],rating:4,stock:18,
+    description:'Perfect for running and gym workouts',popularity:48,urgency: "⚡ Fast delivery"
+  },
+  {
+    id:18,category:'fashion',brand:'Bata',name:'Bata School Shoes',price:85000,
+    images:['https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400'],rating:4,stock:35,
+    description:'Genuine leather - Comfortable for daily wear',popularity:62,urgency: "🔥 Popular item!"
+  },
+  {
+    id:19,category:'fashion',brand:'Levi\'s',name:'Levi\'s Jeans',price:120000,
+    images:['https://images.unsplash.com/photo-1542272604-787c3835535d?w=400'],rating:5,stock:25,
+    description:'Original Levi\'s denim jeans - Multiple sizes',popularity:39,urgency: "⚡ Fast delivery"
+  },
+  {
+    id:20,category:'fashion',brand:'H&M',name:'H&M T-Shirt Pack',price:45000,
+    images:['https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400'],rating:4,stock:40,
+    description:'Pack of 3 cotton t-shirts - Various colors',popularity:67,urgency: "🔥 Hot deal!"
+  },
+
+  // HOME & KITCHEN (15 products)
+  {
+    id:21,category:'home',brand:'Samsung',name:'Samsung Refrigerator',price:1850000,
+    images:['https://images.unsplash.com/photo-1599620430920-8e9c0d1f2c39?w=400'],rating:5,stock:3,
+    description:'350L Double Door Refrigerator - Energy Efficient',popularity:12,urgency: "🚨 Almost gone!"
+  },
+  {
+    id:22,category:'home',brand:'LG',name:'LG Microwave Oven',price:450000,
+    images:['https://images.unsplash.com/photo-1615789591457-74a63395c990?w=400'],rating:4,stock:8,
+    description:'25L Capacity with multiple cooking modes',popularity:21,urgency: "⚡ Fast delivery"
+  },
+  {
+    id:23,category:'home',brand:'Philips',name:'Philips Blender',price:180000,
+    images:['https://images.unsplash.com/photo-1626836989876-53c11cf72b14?w=400'],rating:4,stock:15,
+    description:'Powerful 1000W blender for smoothies and more',popularity:34,urgency: "🔥 Popular item!"
+  },
+  {
+    id:24,category:'home',brand:'Tefal',name:'Tefal Cookware Set',price:280000,
+    images:['https://images.unsplash.com/photo-1556909114-4d0d853e5e1c?w=400'],rating:5,stock:6,
+    description:'8-piece non-stick cookware set',popularity:28,urgency: "⚡ Fast delivery"
+  },
+  {
+    id:25,category:'home',brand:'Mikachi',name:'Electric Kettle',price:45000,
+    images:['https://images.unsplash.com/photo-1605530039641-1c0cee2fe246?w=400'],rating:4,stock:20,
+    description:'1.7L capacity, automatic shut-off',popularity:45,urgency: "🔥 Popular item!"
+  },
+
+  // BEAUTY & PERSONAL CARE (10 products)
+  {
+    id:26,category:'beauty',brand:'Dove',name:'Dove Beauty Soap Pack',price:25000,
+    images:['https://images.unsplash.com/photo-15562285781-8c5a48a203e2?w=400'],rating:5,stock:50,
+    description:'Pack of 6 Dove beauty soap bars',popularity:78,urgency: "🔥 Hot deal!"
+  },
+  {
+    id:27,category:'beauty',brand:'Nivea',name:'Nivea Body Lotion',price:35000,
+    images:['https://images.unsplash.com/photo-15562285781-8c5a48a203e2?w=400'],rating:4,stock:32,
+    description:'400ml Nivea moisturizing body lotion',popularity:45,urgency: "⚡ Fast delivery"
+  },
+
+  // SPORTS & FITNESS (8 products)
+  {
+    id:28,category:'sports',brand:'Adidas',name:'Adidas Football',price:75000,
+    images:['https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400'],rating:4,stock:20,
+    description:'Official size 5 football - Perfect for matches',popularity:28,urgency: "🔥 Popular item!"
+  },
+  {
+    id:29,category:'sports',brand:'Nike',name:'Nike Basketball',price:95000,
+    images:['https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400'],rating:5,stock:12,
+    description:'Official NBA style basketball',popularity:19,urgency: "⚡ Fast delivery"
+  },
+
+  // BOOKS & STATIONERY (7 products)
+  {
+    id:30,category:'books',brand:'Oxford',name:'Oxford Dictionary',price:45000,
+    images:['https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400'],rating:5,stock:40,
+    description:'Latest edition English dictionary',popularity:67,urgency: "🔥 Popular item!"
+  },
+  {
+    id:31,category:'books',brand:'Bic',name:'Bic Pen Pack',price:15000,
+    images:['https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?w=400'],rating:4,stock:100,
+    description:'Pack of 10 blue ink pens',popularity:89,urgency: "⚡ Fast delivery"
+  }
+
+  // Add more products here following the same format...
+];
+
+// ========== COMPLETE CATEGORIES DATA ==========
+const categoriesData = [
+  {name: 'electronics', displayName: 'Electronics', image: '📱', description: 'Phones, TVs, Gadgets'},
+  {name: 'phones', displayName: 'Phones & Tablets', image: '📞', description: 'Smartphones & Tablets'},
+  {name: 'fashion', displayName: 'Fashion', image: '👕', description: 'Clothing & Shoes'},
+  {name: 'home', displayName: 'Home & Kitchen', image: '🏠', description: 'Appliances & Utensils'},
+  {name: 'beauty', displayName: 'Beauty', image: '💄', description: 'Cosmetics & Personal Care'},
+  {name: 'sports', displayName: 'Sports', image: '⚽', description: 'Fitness & Sports Gear'},
+  {name: 'books', displayName: 'Books', image: '📚', description: 'Books & Stationery'}
+];
+
+// ========== PROMO CODES SYSTEM ==========
+const promoCodes = [
+  {code: "WELCOME10", discount: 10, minOrder: 100000, validUntil: "2024-12-31", used: false},
+  {code: "FREESHIP", discount: 0, freeShipping: true, minOrder: 150000, validUntil: "2024-06-30", used: false},
+  {code: "NEW25", discount: 25, maxDiscount: 50000, minOrder: 200000, validUntil: "2024-02-28", used: false}
+];
+
+let activePromoCode = null;
+
+// ========== RECENTLY VIEWED SYSTEM ==========
+let recentlyViewed = JSON.parse(localStorage.getItem('recentlyViewed')) || [];
+
+function addToRecentlyViewed(productId) {
+  const index = recentlyViewed.indexOf(productId);
+  if (index > -1) recentlyViewed.splice(index, 1);
+  recentlyViewed.unshift(productId);
+  recentlyViewed = recentlyViewed.slice(0, 6);
+  localStorage.setItem('recentlyViewed', JSON.stringify(recentlyViewed));
+  updateRecentlyViewedUI();
+}
+
+function updateRecentlyViewedUI() {
+  const section = document.getElementById('recently-viewed-section');
+  const container = document.getElementById('recently-viewed-products');
+  
+  if (recentlyViewed.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+  
+  section.style.display = 'block';
+  container.innerHTML = '';
+  
+  const recentProducts = recentlyViewed
+    .map(id => productsData.find(p => p.id === id))
+    .filter(p => p !== undefined);
+  
+  recentProducts.forEach(product => {
+    const card = document.createElement('div');
+    card.className = 'product';
+    card.innerHTML = createProductCardHTML(product);
+    card.addEventListener('click', () => openProductDetail(product));
+    container.appendChild(card);
+  });
+}
+
+// ========== STATE MANAGEMENT ==========
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+let activeCategory = 'all';
+const deliveryFee = 20000;
+const freeDeliveryThreshold = 300000;
+
+// ========== ELEMENT REFERENCES ==========
+const productsEl = document.getElementById('products');
+const categoryNav = document.getElementById('category-nav');
+const featuredCategoriesEl = document.getElementById('featured-categories');
+const cartBtn = document.getElementById('cart-btn');
+const cartBox = document.getElementById('cart-box');
+const cartItemsEl = document.getElementById('cart-items');
+const cartCountEl = document.getElementById('cart-count');
+const wishlistBtn = document.getElementById('wishlist-btn');
+const wishlistModal = document.getElementById('wishlist-modal');
+const wishlistItemsEl = document.getElementById('wishlist-items');
+
+// ========== INITIALIZATION ==========
+function initializeApp() {
+  buildFeaturedCategories();
+  buildCategories();
+  renderProducts();
+  updateCartUI();
+  updateWishlistUI();
+  updateRecentlyViewedUI();
+  
+  // Add event listeners
+  setupEventListeners();
+}
+
+// ========== EVENT LISTENERS ==========
+function setupEventListeners() {
+  // Cart toggle
+  cartBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    cartBox.style.display = cartBox.style.display === 'block' ? 'none' : 'block';
+    wishlistModal.style.display = 'none';
+  });
+  
+  // Wishlist toggle
+  wishlistBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    wishlistModal.style.display = wishlistModal.style.display === 'block' ? 'none' : 'block';
+    cartBox.style.display = 'none';
+  });
+  
+  // Close modals when clicking outside
+  document.addEventListener('click', function() {
+    cartBox.style.display = 'none';
+    wishlistModal.style.display = 'none';
+  });
+  
+  // Prevent modal close when clicking inside
+  cartBox.addEventListener('click', function(e) {
+    e.stopPropagation();
+  });
+  
+  wishlistModal.addEventListener('click', function(e) {
+    e.stopPropagation();
+  });
+}
+
+// ========== FEATURED CATEGORIES ==========
+function buildFeaturedCategories() {
+  featuredCategoriesEl.innerHTML = '';
+  categoriesData.forEach(cat => {
+    const categoryCard = document.createElement('div');
+    categoryCard.className = 'category-card';
+    categoryCard.innerHTML = `
+      <div style="font-size: 40px; margin-bottom: 10px;">${cat.image}</div>
+      <h3>${cat.displayName}</h3>
+      <p style="font-size: 12px; color: #666; margin: 5px 0 0;">${cat.description}</p>
+    `;
+    categoryCard.onclick = () => filterCategory(cat.name);
+    featuredCategoriesEl.appendChild(categoryCard);
+  });
+}
+
+// ========== CATEGORIES NAVIGATION ==========
+function buildCategories(){
+  const order = ['all', ...categoriesData.map(cat => cat.name)];
+  categoryNav.innerHTML = '';
+  order.forEach(catName => {
+    const catData = catName === 'all' 
+      ? {displayName: 'All Products', image: '⭐'} 
+      : categoriesData.find(c => c.name === catName);
+    
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn' + (catName === 'all' ? ' active' : '');
+    btn.innerHTML = `${catData.image} ${catData.displayName}`;
+    btn.dataset.cat = catName;
+    btn.onclick = () => filterCategory(catName, btn);
+    categoryNav.appendChild(btn);
+  });
+}
+
+// ========== ENHANCED PRODUCT RENDERING ==========
+function createProductCardHTML(product) {
+  const img = product.images && product.images.length ? product.images[0] : '';
+  const isInWishlist = wishlist.includes(product.id);
+  const hasDiscount = product.originalPrice && product.originalPrice > product.price;
+  const discountPercent = hasDiscount ? Math.round((1 - product.price / product.originalPrice) * 100) : 0;
+  
+  return `
+    <img src="${img}" alt="${product.name}" loading="lazy"/>
+    ${hasDiscount ? `<div class="sale-badge">${discountPercent}% OFF</div>` : ''}
+    ${product.urgency ? `<div class="urgency-badge">${product.urgency}</div>` : ''}
+    <button class="wishlist-btn" onclick="toggleWishlist(${product.id}, event)">
+      ${isInWishlist ? '❤️' : '🤍'}
+    </button>
+    <div class="product-info">
+      <h3>${product.name}</h3>
+      <div class="meta">${product.brand}</div>
+      <div class="price">
+        ${hasDiscount ? `<span class="original-price">UGX ${product.originalPrice.toLocaleString()}</span>` : ''}
+        UGX ${product.price.toLocaleString()}
+      </div>
+      <div class="rating">${'★'.repeat(product.rating)}${'☆'.repeat(5-product.rating)}</div>
+      <div class="stock">${product.stock < 6 ? `Only ${product.stock} left!` : 'In Stock'}</div>
+      <div class="popularity">${product.popularity} people bought this</div>
+    </div>
+    <button class="add-to-cart-btn" onclick="addToCart(${product.id}, event)">
+      Add to Cart
+    </button>
+  `;
+}
+
+function renderProducts(){
+  productsEl.innerHTML = '';
+  const q = document.getElementById('search-bar').value.trim().toLowerCase();
+  
+  const items = productsData.filter(p => { 
+    if(activeCategory !== 'all' && p.category !== activeCategory) return false; 
+    if(!q) return true; 
+    return (p.name + ' ' + p.brand + ' ' + p.category).toLowerCase().includes(q); 
+  });
+  
+  if(items.length === 0) {
+    productsEl.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:40px;color:#666">
+        <div style="font-size:48px;margin-bottom:10px">🔍</div>
+        <h3>No products found</h3>
+        <p>Try adjusting your search or browse different categories</p>
+      </div>
+    `;
+    return;
+  }
+  
+  items.forEach(p => {
+    const card = document.createElement('div'); 
+    card.className = 'product';
+    card.innerHTML = createProductCardHTML(p);
+    
+    card.addEventListener('click', (e) => { 
+      if(!e.target.closest('button')) {
+        openProductDetail(p);
+        addToRecentlyViewed(p.id);
+      }
+    });
+    
+    productsEl.appendChild(card);
+  });
+}
+
+// ========== ENHANCED CART FUNCTIONS ==========
+function addToCart(productId, event = null) {
+  if(event) event.stopPropagation();
+  
+  const product = productsData.find(p => p.id === productId);
+  if(!product) return;
+  
+  const existing = cart.find(item => item.productId === productId);
+  if(existing) {
+    existing.quantity += 1;
+  } else {
+    cart.push({
+      productId: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+      image: product.images[0],
+      brand: product.brand,
+      description: product.description
+    });
+  }
+  
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartUI();
+  showQuickMessage(`Added ${product.name} to cart!`);
+}
+
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartUI();
+  showQuickMessage('Item removed from cart');
+}
+
+function calculateCartTotal() {
+  let subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  let discount = 0;
+  let shipping = deliveryFee;
+  
+  if (activePromoCode) {
+    if (subtotal >= activePromoCode.minOrder) {
+      if (activePromoCode.discount > 0) {
+        discount = (subtotal * activePromoCode.discount) / 100;
+        if (activePromoCode.maxDiscount) {
+          discount = Math.min(discount, activePromoCode.maxDiscount);
+        }
+      }
+      if (activePromoCode.freeShipping) {
+        shipping = 0;
+      }
+    } else {
+      document.getElementById('promo-message').innerHTML = 
+        `<span style="color: var(--warning)">Add UGX ${(activePromoCode.minOrder - subtotal).toLocaleString()} more to use this promo</span>`;
+      activePromoCode = null;
+    }
+  }
+  
+  if (subtotal - discount >= freeDeliveryThreshold) {
+    shipping = 0;
+  }
+  
+  const total = subtotal - discount + shipping;
+  
+  return { subtotal, discount, shipping, total };
+}
+
+function updateCartUI(){
+  cartItemsEl.innerHTML = '';
+  const { subtotal, discount, shipping, total } = calculateCartTotal();
+  
+  if(cart.length === 0) {
+    cartItemsEl.innerHTML = `
+      <div style="text-align:center;padding:20px;color:#666">
+        <div style="font-size:48px;margin-bottom:10px">🛒</div>
+        <p>Your cart is empty</p>
+        <p style="font-size:14px">Add some products to get started!</p>
+      </div>
+    `;
+    cartCountEl.textContent = '0';
+    return;
+  }
+  
+  cart.forEach((item, idx) => {
+    const itemTotal = item.price * item.quantity;
+    
+    const line = document.createElement('div');
+    line.style.display = 'flex';
+    line.style.alignItems = 'center';
+    line.style.gap = '10px';
+    line.style.padding = '10px 0';
+    line.style.borderBottom = '1px solid #f5f5f5';
+    
+    line.innerHTML = `
+      <img src="${item.image}" style="width:50px;height:50px;object-fit:cover;border-radius:6px">
+      <div style="flex:1">
+        <div style="font-weight:500;font-size:14px">${item.name}</div>
+        <div style="color:var(--brand);font-weight:bold;font-size:14px">UGX ${itemTotal.toLocaleString()}</div>
+        <div style="font-size:12px;color:#666">Qty: ${item.quantity} × UGX ${item.price.toLocaleString()}</div>
+      </div>
+      <div style="display:flex;gap:5px;flex-direction:column">
+        <button class="cart-btn-inline" onclick="buyFromCart(${idx})" style="font-size:11px">Buy</button>
+        <button class="cart-remove" onclick="removeFromCart(${idx})" style="font-size:11px">Remove</button>
+      </div>
+    `;
+    
+    cartItemsEl.appendChild(line);
+  });
+  
+  const summary = document.createElement('div');
+  summary.style.marginTop = '15px';
+  summary.style.padding = '15px';
+  summary.style.background = '#f8f9fa';
+  summary.style.borderRadius = '8px';
+  
+  summary.innerHTML = `
+    <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+      <span>Subtotal:</span>
+      <strong>UGX ${subtotal.toLocaleString()}</strong>
+    </div>
+    ${discount > 0 ? `
+    <div style="display:flex;justify-content:space-between;margin-bottom:5px;color:var(--success)">
+      <span>Discount:</span>
+      <strong>-UGX ${discount.toLocaleString()}</strong>
+    </div>
+    ` : ''}
+    <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+      <span>Delivery:</span>
+      <strong>UGX ${shipping.toLocaleString()} ${shipping === 0 ? '🎉' : ''}</strong>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin:10px 0;padding-top:10px;border-top:1px solid #ddd;font-size:16px">
+      <span><strong>Total:</strong></span>
+      <strong style="color:var(--brand)">UGX ${total.toLocaleString()}</strong>
+    </div>
+    ${subtotal - discount < freeDeliveryThreshold && !activePromoCode?.freeShipping ? 
+      `<div style="font-size:12px;color:var(--success);text-align:center;margin:5px 0">
+        Add UGX ${(freeDeliveryThreshold - (subtotal - discount)).toLocaleString()} more for FREE delivery!
+      </div>` : 
+      activePromoCode?.freeShipping ? 
+      `<div style="font-size:12px;color:var(--success);text-align:center">🎉 FREE shipping with promo code!</div>` :
+      `<div style="font-size:12px;color:var(--success);text-align:center">🎉 You qualify for FREE delivery!</div>`
+    }
+    <button class="btn btn-success" onclick="buyFromCart()" style="margin-top:10px;width:100%">
+      Checkout Now
+    </button>
+  `;
+  
+  cartItemsEl.appendChild(summary);
+  cartCountEl.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+}
+
+// ========== WISHLIST FUNCTIONS ==========
+function toggleWishlist(productId, event = null) {
+  if (event) event.stopPropagation();
+  
+  const index = wishlist.indexOf(productId);
+  if (index > -1) {
+    wishlist.splice(index, 1);
+    showQuickMessage('Removed from wishlist');
+  } else {
+    wishlist.push(productId);
+    showQuickMessage('Added to wishlist!');
+  }
+  
+  localStorage.setItem('wishlist', JSON.stringify(wishlist));
+  updateWishlistUI();
+  renderProducts(); // Refresh product cards to update heart icons
+}
+
+function updateWishlistUI() {
+  wishlistItemsEl.innerHTML = '';
+  
+  if (wishlist.length === 0) {
+    wishlistItemsEl.innerHTML = `
+      <div style="text-align:center;padding:20px;color:#666">
+        <div style="font-size:48px;margin-bottom:10px">❤️</div>
+        <p>Your wishlist is empty</p>
+        <p style="font-size:14px">Add products you love!</p>
+      </div>
+    `;
+    return;
+  }
+  
+  wishlist.forEach(productId => {
+    const product = productsData.find(p => p.id === productId);
+    if (!product) return;
+    
+    const item = document.createElement('div');
+    item.style.display = 'flex';
+    item.style.alignItems = 'center';
+    item.style.gap = '10px';
+    item.style.padding = '10px 0';
+    item.style.borderBottom = '1px solid #f5f5f5';
+    item.style.cursor = 'pointer';
+    
+    item.innerHTML = `
+      <img src="${product.images[0]}" style="width:50px;height:50px;object-fit:cover;border-radius:6px">
+      <div style="flex:1">
+        <div style="font-weight:500;font-size:14px">${product.name}</div>
+        <div style="color:var(--brand);font-weight:bold;font-size:14px">UGX ${product.price.toLocaleString()}</div>
+      </div>
+      <button class="cart-remove" onclick="addToCart(${product.id})" style="font-size:11px">Add to Cart</button>
+    `;
+    
+    item.addEventListener('click', () => {
+      openProductDetail(product);
+      addToRecentlyViewed(product.id);
+    });
+    
+    wishlistItemsEl.appendChild(item);
+  });
+}
+
+// ========== PROMO CODE SYSTEM ==========
+function applyPromoCode() {
+  const codeInput = document.getElementById('promo-code').value.trim().toUpperCase();
+  const messageEl = document.getElementById('promo-message');
+  
+  if (!codeInput) {
+    messageEl.innerHTML = '<span style="color: var(--danger)">Please enter a promo code</span>';
+    return;
+  }
+  
+  const promo = promoCodes.find(p => p.code === codeInput && !p.used);
+  
+  if (!promo) {
+    messageEl.innerHTML = '<span style="color: var(--danger)">Invalid or expired promo code</span>';
+    activePromoCode = null;
+    updateCartUI();
+    return;
+  }
+  
+  if (promo.validUntil && new Date() > new Date(promo.validUntil)) {
+    messageEl.innerHTML = '<span style="color: var(--danger)">Promo code has expired</span>';
+    activePromoCode = null;
+    updateCartUI();
+    return;
+  }
+  
+  activePromoCode = promo;
+  messageEl.innerHTML = `<span style="color: var(--success)">Promo code applied! ${promo.discount > 0 ? promo.discount + '% discount' : 'Free shipping'}</span>`;
+  updateCartUI();
+}
+
+// ========== ENHANCED PRODUCT DETAIL MODAL ==========
+function openProductDetail(prod){
+  window.currentDetail = prod;
+  document.getElementById('detail-name').innerText = prod.name;
+  
+  if (prod.originalPrice && prod.originalPrice > prod.price) {
+    const discountPercent = Math.round((1 - prod.price / prod.originalPrice) * 100);
+    document.getElementById('detail-price').innerHTML = `
+      <span class="original-price">UGX ${prod.originalPrice.toLocaleString()}</span>
+      UGX ${prod.price.toLocaleString()} 
+      <span style="color:var(--sale);font-size:14px">(${discountPercent}% OFF)</span>
+    `;
+  } else {
+    document.getElementById('detail-price').innerText = 'UGX ' + prod.price.toLocaleString();
+  }
+  
+  document.getElementById('detail-desc').innerText = prod.description;
+  document.getElementById('detail-rating').innerText = '★'.repeat(prod.rating) + '☆'.repeat(5 - prod.rating);
+  document.getElementById('detail-stock').innerText = prod.stock < 6 ? `Only ${prod.stock} left in stock!` : 'In Stock';
+  document.getElementById('detail-qty').value = 1;
+  document.getElementById('detail-qty').max = prod.stock;
+  
+  const bulkSection = document.getElementById('bulk-pricing-section');
+  const bulkList = document.getElementById('bulk-pricing-list');
+  if (prod.bulkPricing && prod.bulkPricing.length > 0) {
+    bulkSection.style.display = 'block';
+    bulkList.innerHTML = prod.bulkPricing.map(bulk => `
+      <div style="font-size:13px;margin:4px 0">
+        • Buy ${bulk.minQty}+: <strong>UGX ${bulk.price.toLocaleString()}</strong> each (${Math.round((1 - bulk.price/prod.price) * 100)}% off)
+      </div>
+    `).join('');
+  } else {
+    bulkSection.style.display = 'none';
+  }
+  
+  const reviewsSection = document.getElementById('reviews-section');
+  const reviewsList = document.getElementById('reviews-list');
+  if (prod.reviews && prod.reviews.length > 0) {
+    reviewsSection.style.display = 'block';
+    reviewsList.innerHTML = prod.reviews.map(review => `
+      <div class="review">
+        <div class="review-header">
+          <span class="reviewer">${review.user}</span>
+          <span class="review-date">${review.date}</span>
+        </div>
+        <div class="rating">${'★'.repeat(review.rating)}${'☆'.repeat(5-review.rating)}</div>
+        <div>${review.comment}</div>
+      </div>
+    `).join('');
+  } else {
+    reviewsSection.style.display = 'none';
+  }
+  
+  const mainMedia = document.getElementById('main-media'); 
+  mainMedia.innerHTML = '';
+  const img = document.createElement('img'); 
+  img.src = prod.images && prod.images.length ? prod.images[0] : '';
+  img.alt = prod.name;
+  mainMedia.appendChild(img);
+  
+  const thumbContainer = document.getElementById('thumbnail-container'); 
+  thumbContainer.innerHTML = '';
+  (prod.images || []).forEach((src, i) => {
+    const t = document.createElement('img'); 
+    t.src = src; 
+    t.alt = `${prod.name} view ${i + 1}`;
+    if(i === 0) t.classList.add('selected');
+    t.onclick = () => { 
+      mainMedia.querySelector('img').src = src; 
+      thumbContainer.querySelectorAll('img').forEach(x => x.classList.remove('selected')); 
+      t.classList.add('selected'); 
+    };
+    thumbContainer.appendChild(t);
+  });
+  
+  const relatedList = document.getElementById('related-list'); 
+  relatedList.innerHTML = '';
+  const relatedProducts = productsData
+    .filter(p => p.category === prod.category && p.id !== prod.id)
+    .slice(0, 4);
+  
+  if(relatedProducts.length > 0) {
+    relatedProducts.forEach(r => {
+      const div = document.createElement('div'); 
+      div.className = 'related-item'; 
+      div.innerHTML = `
+        <img src="${r.images[0]}" alt="${r.name}">
+        <p>${r.name}<br><strong>UGX ${r.price.toLocaleString()}</strong></p>
+      `; 
+      div.onclick = () => {
+        openProductDetail(r);
+        addToRecentlyViewed(r.id);
+      }; 
+      relatedList.appendChild(div);
+    });
+  } else {
+    relatedList.innerHTML = '<p style="color:#666;font-style:italic">No related products found</p>';
+  }
+  
+  document.getElementById('product-detail-modal').style.display = 'flex';
+}
+
+function closeProductDetail() {
+  document.getElementById('product-detail-modal').style.display = 'none';
+  window.currentDetail = null;
+}
+
+function addDetailToCart() {
+  const product = window.currentDetail;
+  const quantity = parseInt(document.getElementById('detail-qty').value) || 1;
+  
+  for (let i = 0; i < quantity; i++) {
+    addToCart(product.id);
+  }
+  
+  showQuickMessage(`Added ${quantity} ${product.name} to cart!`);
+}
+
+function buyDetailNow() {
+  const product = window.currentDetail;
+  const quantity = parseInt(document.getElementById('detail-qty').value) || 1;
+  
+  // Clear cart and add this product with quantity
+  cart = [];
+  for (let i = 0; i < quantity; i++) {
+    addToCart(product.id);
+  }
+  
+  closeProductDetail();
+  buyFromCart();
+}
+
+// ========== WHATSAPP ORDER FUNCTIONALITY ==========
+function sendOrderToWhatsApp(orderData) {
+  const phoneNumber = "256766379462"; // Your WhatsApp number
+  const message = formatOrderMessage(orderData);
+  
+  // Create WhatsApp URL with order details
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+  
+  // Open WhatsApp in new tab
+  window.open(whatsappUrl, '_blank');
+}
+
+function formatOrderMessage(orderData) {
+  const { orderId, customer, items, summary, paymentMethod } = orderData;
+  
+  let message = `🛍️ *NEW ORDER - iBlue* 🛍️\n\n`;
+  message += `*Order ID:* ${orderId}\n`;
+  message += `*Customer:* ${customer.name}\n`;
+  message += `*Phone:* ${customer.phone}\n`;
+  message += `*Address:* ${customer.address}\n`;
+  message += `*Payment Method:* ${paymentMethod}\n\n`;
+  message += `*Order Items:*\n`;
+  
+  items.forEach((item, index) => {
+    message += `\n${index + 1}. *${item.name}*\n`;
+    message += `   Brand: ${item.brand}\n`;
+    message += `   Quantity: ${item.quantity}\n`;
+    message += `   Price: UGX ${item.price.toLocaleString()} each\n`;
+    message += `   Total: UGX ${(item.price * item.quantity).toLocaleString()}\n`;
+    message += `   Image: ${item.image}\n`; // This will show the image URL
+  });
+  
+  message += `\n*Order Summary:*\n`;
+  message += `Subtotal: UGX ${summary.subtotal.toLocaleString()}\n`;
+  if (summary.discount > 0) {
+    message += `Discount: -UGX ${summary.discount.toLocaleString()}\n`;
+  }
+  message += `Delivery: UGX ${summary.shipping.toLocaleString()}\n`;
+  message += `*TOTAL: UGX ${summary.total.toLocaleString()}*\n\n`;
+  message += `🕒 Order Time: ${new Date().toLocaleString()}\n`;
+  message += `📍 *iBlue Online Store*`;
+  
+  return message;
+}
+
+// ========== CHECKOUT FUNCTIONS ==========
+function buyFromCart(index = null) {
+  if (index !== null) {
+    // Buy single item from cart
+    const item = cart[index];
+    cart = [item]; // Set cart to only this item
+  }
+  
+  if (cart.length === 0) {
+    showQuickMessage('Your cart is empty!');
+    return;
+  }
+  
+  document.getElementById('checkout-modal').style.display = 'flex';
+  updateCheckoutSummary();
+}
+
+function updateCheckoutSummary() {
+  const { subtotal, discount, shipping, total } = calculateCartTotal();
+  const summaryEl = document.getElementById('checkout-summary');
+  
+  summaryEl.innerHTML = `
+    <h4>Order Summary</h4>
+    <div style="display:flex;justify-content:space-between;margin:5px 0">
+      <span>Subtotal (${cart.reduce((sum, item) => sum + item.quantity, 0)} items):</span>
+      <span>UGX ${subtotal.toLocaleString()}</span>
+    </div>
+    ${discount > 0 ? `
+    <div style="display:flex;justify-content:space-between;margin:5px 0;color:var(--success)">
+      <span>Discount:</span>
+      <span>-UGX ${discount.toLocaleString()}</span>
+    </div>
+    ` : ''}
+    <div style="display:flex;justify-content:space-between;margin:5px 0">
+      <span>Delivery:</span>
+      <span>UGX ${shipping.toLocaleString()}</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin:10px 0;padding-top:10px;border-top:1px solid #ddd;font-weight:bold">
+      <span>Total:</span>
+      <span style="color:var(--brand)">UGX ${total.toLocaleString()}</span>
+    </div>
+  `;
+}
+
+function showPaymentDetails() {
+  const method = document.getElementById('payment-method').value;
+  const detailsEl = document.getElementById('payment-details');
+  const instructionsEl = document.getElementById('payment-instructions');
+  
+  if (!method) {
+    detailsEl.style.display = 'none';
+    return;
+  }
+  
+  detailsEl.style.display = 'block';
+  
+  switch(method) {
+    case 'mobile_money':
+      instructionsEl.innerHTML = `
+        <strong>Mobile Money Payment</strong><br>
+        Send payment to: <strong>0757 970 465</strong><br>
+        Use your name as reference<br>
+        <small>You'll receive a confirmation SMS</small>
+      `;
+      break;
+    case 'bank_transfer':
+      instructionsEl.innerHTML = `
+        <strong>Bank Transfer</strong><br>
+        Bank: Centenary Bank<br>
+        Account: 3100045678<br>
+        Name: iBlue Uganda Ltd<br>
+        <small>Send receipt to 0757 970 465</small>
+      `;
+      break;
+    case 'cash':
+      instructionsEl.innerHTML = `
+        <strong>Cash on Delivery</strong><br>
+        Pay when your order arrives<br>
+        <small>Exact change appreciated</small>
+      `;
+      break;
+  }
+}
+
+function submitOrder() {
+  const name = document.getElementById('customer-name').value.trim();
+  const phone = document.getElementById('customer-phone').value.trim();
+  const address = document.getElementById('customer-address').value.trim();
+  const paymentMethod = document.getElementById('payment-method').value;
+  
+  if (!name || !phone || !address || !paymentMethod) {
+    showQuickMessage('Please fill all required fields');
+    return;
+  }
+  
+  // Generate order ID
+  const orderId = 'IB' + Date.now().toString().slice(-6);
+  document.getElementById('order-id').textContent = '#' + orderId;
+  
+  // Prepare order data for WhatsApp
+  const { subtotal, discount, shipping, total } = calculateCartTotal();
+  
+  const orderData = {
+    orderId: orderId,
+    customer: {
+      name: name,
+      phone: phone,
+      address: address
+    },
+    items: cart.map(item => ({
+      name: item.name,
+      brand: item.brand,
+      quantity: item.quantity,
+      price: item.price,
+      image: item.image // This includes the product image URL
+    })),
+    summary: {
+      subtotal: subtotal,
+      discount: discount,
+      shipping: shipping,
+      total: total
+    },
+    paymentMethod: paymentMethod
+  };
+  
+  // Send order to WhatsApp
+  sendOrderToWhatsApp(orderData);
+  
+  // Clear cart and close modals
+  cart = [];
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartUI();
+  
+  document.getElementById('checkout-modal').style.display = 'none';
+  document.getElementById('order-confirm-modal').style.display = 'flex';
+  
+  // Reset form
+  document.getElementById('checkout-form').reset();
+  activePromoCode = null;
+  document.getElementById('promo-message').innerHTML = '';
+}
+
+function closeCheckout() {
+  document.getElementById('checkout-modal').style.display = 'none';
+  document.getElementById('checkout-form').reset();
+  activePromoCode = null;
+  document.getElementById('promo-message').innerHTML = '';
+}
+
+function closeOrderConfirm() {
+  document.getElementById('order-confirm-modal').style.display = 'none';
+}
+
+// ========== UTILITY FUNCTIONS ==========
+function filterCategory(category, btn = null) {
+  activeCategory = category;
+  
+  // Update active button
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  if (btn) {
+    btn.classList.add('active');
+  } else {
+    document.querySelector(`[data-cat="${category}"]`).classList.add('active');
+  }
+  
+  renderProducts();
+}
+
+function onSearch() {
+  renderProducts();
+}
+
+function showQuickMessage(message) {
+  // Create toast notification
+  const toast = document.createElement('div');
+  toast.textContent = message;
+  toast.style.cssText = `
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    background: var(--success);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    z-index: 10000;
+    animation: slideIn 0.3s, slideOut 0.3s 2s forwards;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  `;
+  
+  document.body.appendChild(toast);
+  setTimeout(() => {
+    if (toast.parentNode) {
+      toast.parentNode.removeChild(toast);
+    }
+  }, 2300);
+}
+
+// ========== INITIALIZE APP ==========
+initializeApp();
+</script>
+</body>
+</html>
